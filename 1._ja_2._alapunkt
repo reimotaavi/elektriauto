@@ -1,0 +1,3 @@
+1) Kuna tohime saame teha teistes linnades laadimiseks peatusi, siis on meil vaja igast linnast jõuda vähemalt lähimasse laadimispunkti ehk teise linna. Leiame kaugused
+   igast linnast neile kõige lähemale asuvasse linna. Nendest leitud väärtustest leiame, milline kahe lähima linna vaheline kaugus on kõige suurem ning see väärtus ongi
+   minimaalne x.
