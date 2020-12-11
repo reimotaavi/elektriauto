@@ -2,6 +2,8 @@
 #include <vector>
 #include <fstream>
 #include <string>
+#include <climits>
+#include <algorithm>
 
 using namespace std;
 
@@ -81,7 +83,27 @@ void kruskal(vector<vector<int>>& maatriks){
     cout << "Minimaalse puu kogukaal = " << mincost << endl;
 }
 
+void maksimaalne_x (vector<vector<int>>& maatriks){
+    vector <int> suurimad_kaugused;
+    // leian suurimad kaugused iga rea kohta ja salvestan need uude vectorisse
+    for (unsigned int i = 0; i<maatriks.size(); i++) {
+         suurimad_kaugused.push_back(*max_element(begin(maatriks[i]), end(maatriks[i])));
+    }
+    // valjastan uue vectori suurima kauguse ehk maksimaalse Xi
+    cout << endl << "Maksimaalne x on " << *max_element(begin(suurimad_kaugused), end(suurimad_kaugused)) << " km" << endl;
+}
+
+//Kirjuta programm, mis leiaks sisendi x põhjal lühimad kaugused igast linnast igasse linna.
+void luhimad_kaugused () {
+
+    int sisend;
+
+    cout << "Sisesta X-i vaartus: ";
+    cin >> sisend;
+}
+
 int main(){
     vector<vector<int>> maatriks = loe_andmed("linnade_kaugused.csv");
     kruskal(maatriks);
+    maksimaalne_x (maatriks);
 }
