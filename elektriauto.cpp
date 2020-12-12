@@ -45,7 +45,7 @@ vector<vector<int>> loe_andmed(const string& failinimi){
     }
 }
 
-vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks){
+vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks, int sisend){
     vector<vector<int>> kaugused;
     for(unsigned int i = 0; i < linnade_arv; i++){
         kaugused.push_back(vector<int>(linnade_arv, numeric_limits<int>::max()));
@@ -63,7 +63,7 @@ vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks){
                 if (kaugused[tipp][lopp] == std::numeric_limits<int>::max()) {
                     continue;
                 }
-                if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp]) {
+                if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp] && kaugused[algus][tipp] < sisend && kaugused[tipp][lopp] < sisend) {
                     kaugused[algus][lopp] = kaugused[algus][tipp] + kaugused[tipp][lopp];
                 }
             }
@@ -71,6 +71,71 @@ vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks){
     }
     return kaugused;
 }
+
+//int V = linnade_arv;
+//
+//void printSolution(vector<vector<int>> dist)
+//{
+//    cout<<"The following matrix shows the shortest distances"
+//          " between every pair of vertices \n";
+//    for (int i = 0; i < V; i++)
+//    {
+//        for (int j = 0; j < V; j++)
+//        {
+//            if (dist[i][j] == INT_MAX)
+//                cout<<"INF"<<"     ";
+//            else
+//                cout<<dist[i][j]<<"     ";
+//        }
+//        cout<<endl;
+//    }
+//}
+//
+//void floydWarshall (vector<vector<int>> graph, int sisend)
+//{
+//    vector<vector<int>> dist;
+//    int i, j, k;
+//
+//    /* Initialize the solution matrix same
+//    as input graph matrix. Or we can say
+//    the initial values of shortest distances
+//    are based on shortest paths considering
+//    no intermediate vertex. */
+//    for (i = 0; i < V; i++)
+//        for (j = 0; j < V; j++)
+//            dist[i][j] = graph[i][j];
+//
+//    /* Add all vertices one by one to
+//    the set of intermediate vertices.
+//    ---> Before start of an iteration,
+//    we have shortest distances between all
+//    pairs of vertices such that the
+//    shortest distances consider only the
+//    vertices in set {0, 1, 2, .. k-1} as
+//    intermediate vertices.
+//    ----> After the end of an iteration,
+//    vertex no. k is added to the set of
+//    intermediate vertices and the set becomes {0, 1, 2, .. k} */
+//    for (k = 0; k < V; k++)
+//    {
+//        // Pick all vertices as source one by one
+//        for (i = 0; i < V; i++)
+//        {
+//            // Pick all vertices as destination for the
+//            // above picked source
+//            for (j = 0; j < V; j++)
+//            {
+//                // If vertex k is on the shortest path from
+//                // i to j, then update the value of dist[i][j]
+//                if (dist[i][k] + dist[k][j] < dist[i][j] && dist[i][k] + dist[k][j] < sisend)
+//                    dist[i][j] = dist[i][k] + dist[k][j];
+//            }
+//        }
+//    }
+//
+//    // Print the shortest distance matrix
+//    printSolution(dist);
+//}
 
 void valjasta(vector<vector<int>> kaugused, string failinimi){
 
@@ -86,8 +151,16 @@ void valjasta(vector<vector<int>> kaugused, string failinimi){
     }
 }
 
-int main(){
+int main() {
     vector<vector<int>> maatriks = loe_andmed("linnade_kaugused.csv");
-    vector<vector<int>> kaugused = leia_kaugused(maatriks);
+    int sisend;
+
+    cout << "Sisesta soiduulatus: ";
+    cin >> sisend;
+    vector<vector<int>> kaugused = leia_kaugused(maatriks, sisend);
     valjasta(kaugused, "valjund.csv");
+
+//
+//    floydWarshall(maatriks, sisend);
+
 }
