@@ -63,7 +63,10 @@ vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks, int sisend){
                 if (kaugused[tipp][lopp] == std::numeric_limits<int>::max()) {
                     continue;
                 }
-                if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp] && kaugused[algus][tipp] < sisend && kaugused[tipp][lopp] < sisend) {
+                if (kaugused[tipp][lopp] > 90 || kaugused[algus][tipp] > 90) {
+                    kaugused[algus][lopp] = kaugused[algus][tipp] + kaugused[tipp][lopp];
+                }
+                if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp] && kaugused[algus][tipp] < 90 && kaugused[tipp][lopp] < 90) {
                     kaugused[algus][lopp] = kaugused[algus][tipp] + kaugused[tipp][lopp];
                 }
             }
@@ -141,13 +144,13 @@ void valjasta(vector<vector<int>> kaugused, string failinimi){
 
     ofstream valjund(failinimi);
 
-    if(valjund.is_open()) {
+    //if(valjund.is_open()) {
         for (unsigned int i = 0; i < linnade_arv; i++) {
             for (unsigned int j = 0; j < linnade_arv; j++) {
-                valjund << kaugused[i][j] << ",";
+                cout << kaugused[i][j] << ",";
             }
-            valjund << endl;
-        }
+            cout << endl;
+    //    }
     }
 }
 
