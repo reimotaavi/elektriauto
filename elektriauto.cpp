@@ -2,8 +2,8 @@
 #include <vector>
 #include <fstream>
 #include <string>
-#include <climits>
 #include <algorithm>
+#include <iomanip>
 
 using namespace std;
 
@@ -18,7 +18,7 @@ vector<vector<int>> loe_andmed(const string& failinimi){
     if(sisend.is_open()){
         string rida;
         string arv = "";
-        int kaugus = 0;
+        int kaugus;
         for(unsigned int i = 0; i < linnade_arv; i++){
             vector<int> kaugused;
             sisend.ignore(256, ','); // ignoreerin linna nime
@@ -50,7 +50,10 @@ vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks, int sisend){
     for(unsigned int i = 0; i < linnade_arv; i++){
         kaugused.push_back(vector<int>(linnade_arv, numeric_limits<int>::max()));
         for(unsigned int j = 0; j < linnade_arv; j++){
-            kaugused[i][j] = maatriks[i][j];
+            if(maatriks[i][j] <= sisend){ //kui saame otse uhest linnast teise ilma laadimiseta, siis maarame pole
+                //uut teed vaja otsida ehk maarame selle kauguste tabelisse
+                kaugused[i][j] = maatriks[i][j];
+            }
         }
         kaugused[i][i] = 0;
     }
@@ -63,10 +66,7 @@ vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks, int sisend){
                 if (kaugused[tipp][lopp] == std::numeric_limits<int>::max()) {
                     continue;
                 }
-                if (kaugused[algus][tipp] < 120 && kaugused[tipp][lopp] < 120) {
-                    kaugused[algus][lopp] = kaugused[algus][tipp] + kaugused[tipp][lopp];
-                }
-                else if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp]){
+                if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp]){
                     kaugused[algus][lopp] = kaugused[algus][tipp] + kaugused[tipp][lopp];
                 }
             }
@@ -75,95 +75,31 @@ vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks, int sisend){
     return kaugused;
 }
 
-//int V = linnade_arv;
-//
-//void printSolution(vector<vector<int>> dist)
-//{
-//    cout<<"The following matrix shows the shortest distances"
-//          " between every pair of vertices \n";
-//    for (int i = 0; i < V; i++)
-//    {
-//        for (int j = 0; j < V; j++)
-//        {
-//            if (dist[i][j] == INT_MAX)
-//                cout<<"INF"<<"     ";
-//            else
-//                cout<<dist[i][j]<<"     ";
-//        }
-//        cout<<endl;
-//    }
-//}
-//
-//void floydWarshall (vector<vector<int>> graph, int sisend)
-//{
-//    vector<vector<int>> dist;
-//    int i, j, k;
-//
-//    /* Initialize the solution matrix same
-//    as input graph matrix. Or we can say
-//    the initial values of shortest distances
-//    are based on shortest paths considering
-//    no intermediate vertex. */
-//    for (i = 0; i < V; i++)
-//        for (j = 0; j < V; j++)
-//            dist[i][j] = graph[i][j];
-//
-//    /* Add all vertices one by one to
-//    the set of intermediate vertices.
-//    ---> Before start of an iteration,
-//    we have shortest distances between all
-//    pairs of vertices such that the
-//    shortest distances consider only the
-//    vertices in set {0, 1, 2, .. k-1} as
-//    intermediate vertices.
-//    ----> After the end of an iteration,
-//    vertex no. k is added to the set of
-//    intermediate vertices and the set becomes {0, 1, 2, .. k} */
-//    for (k = 0; k < V; k++)
-//    {
-//        // Pick all vertices as source one by one
-//        for (i = 0; i < V; i++)
-//        {
-//            // Pick all vertices as destination for the
-//            // above picked source
-//            for (j = 0; j < V; j++)
-//            {
-//                // If vertex k is on the shortest path from
-//                // i to j, then update the value of dist[i][j]
-//                if (dist[i][k] + dist[k][j] < dist[i][j] && dist[i][k] + dist[k][j] < sisend)
-//                    dist[i][j] = dist[i][k] + dist[k][j];
-//            }
-//        }
-//    }
-//
-//    // Print the shortest distance matrix
-//    printSolution(dist);
-//}
-
-void valjasta(vector<vector<int>> kaugused, string failinimi){
-
-    ofstream valjund(failinimi);
-
-    //if(valjund.is_open()) {
-        for (unsigned int i = 0; i < linnade_arv; i++) {
-            for (unsigned int j = 0; j < linnade_arv; j++) {
-                cout << kaugused[i][j] << ",";
+double keskmine_pikenemine(vector<vector<int>>& maatriks, vector<vector<int>>& kaugused){
+    double keskmine_protsent = 0;
+    int vaartused = 0;
+    cout << setprecision(20);
+    for(unsigned int i = 0; i < linnade_arv; i++){
+        for(unsigned int j = 0; j < linnade_arv; j++){
+            if(i == j){
+                continue;
+            }else{
+                double protsent = (maatriks[i][j] / kaugused[i][j]) * 100;
+                keskmine_protsent += protsent;
+                vaartused++;
             }
-            cout << endl;
-    //    }
+        }
     }
+    return (keskmine_protsent / vaartused);
 }
 
 int main() {
     vector<vector<int>> maatriks = loe_andmed("linnade_kaugused.csv");
     int sisend;
-
     cout << "Sisesta soiduulatus: ";
     cin >> sisend;
     vector<vector<int>> kaugused = leia_kaugused(maatriks, sisend);
-    valjasta(kaugused, "valjund.csv");
-
-//
-//    floydWarshall(maatriks, sisend);
-
+    double keskmine_pikenemine_protsent = keskmine_pikenemine(maatriks, kaugused);
+    cout << setprecision(4);
+    cout << "Keskmine pikenemine: " << 100 - keskmine_pikenemine_protsent << " %" << endl;
 }
