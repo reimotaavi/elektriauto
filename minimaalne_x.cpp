@@ -65,14 +65,16 @@ void kruskal(vector<vector<int>>& maatriks){
         vanem[i] = i;
     }
     int servade_arv = 0;
+    vector<int> servad;
     while (servade_arv < linnade_arv - 1){
         int min = INT_MAX, a = - 1, b = - 1;
         for (int i = 0; i < linnade_arv; i++) {
             for (int j = 0; j < linnade_arv; j++) {
                 if (leia(i) != leia(j) && maatriks[i][j] < min) {
-                    min = maatriks[i][j];
+                    min = maatriks[i][j] * - 1;
                     a = i;
                     b = j;
+                    servad.push_back(min);
                 }
             }
         }
@@ -80,30 +82,13 @@ void kruskal(vector<vector<int>>& maatriks){
         printf("Puu serv %d:(%d, %d) cost:%d \n", servade_arv++, a, b, min);
         mincost += min;
     }
+    auto it = *min_element(servad.begin(), servad.end());
+    cout << "Max X on: " it << endl;
     cout << "Minimaalse puu kogukaal = " << mincost << endl;
 }
 
-void maksimaalne_x (vector<vector<int>>& maatriks){
-    vector <int> suurimad_kaugused;
-    // leian suurimad kaugused iga rea kohta ja salvestan need uude vectorisse
-    for (unsigned int i = 0; i<maatriks.size(); i++) {
-         suurimad_kaugused.push_back(*max_element(begin(maatriks[i]), end(maatriks[i])));
-    }
-    // valjastan uue vectori suurima kauguse ehk maksimaalse Xi
-    cout << endl << "Maksimaalne x on " << *max_element(begin(suurimad_kaugused), end(suurimad_kaugused)) << " km" << endl;
-}
-
-//Kirjuta programm, mis leiaks sisendi x põhjal lühimad kaugused igast linnast igasse linna.
-void luhimad_kaugused () {
-
-    int sisend;
-
-    cout << "Sisesta X-i vaartus: ";
-    cin >> sisend;
-}
 
 int main(){
     vector<vector<int>> maatriks = loe_andmed("linnade_kaugused.csv");
     kruskal(maatriks);
-    maksimaalne_x (maatriks);
 }
