@@ -63,10 +63,10 @@ vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks, int sisend){
                 if (kaugused[tipp][lopp] == std::numeric_limits<int>::max()) {
                     continue;
                 }
-                if (kaugused[tipp][lopp] > 90 || kaugused[algus][tipp] > 90) {
+                if (kaugused[algus][tipp] < 120 && kaugused[tipp][lopp] < 120) {
                     kaugused[algus][lopp] = kaugused[algus][tipp] + kaugused[tipp][lopp];
                 }
-                if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp] && kaugused[algus][tipp] < 90 && kaugused[tipp][lopp] < 90) {
+                else if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp]){
                     kaugused[algus][lopp] = kaugused[algus][tipp] + kaugused[tipp][lopp];
                 }
             }
