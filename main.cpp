@@ -65,10 +65,7 @@ vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks, int sisend){
                 if (kaugused[tipp][lopp] == std::numeric_limits<int>::max()) {
                     continue;
                 }
-//                if (kaugused[algus][lopp] < sisend) {
-//                    kaugused[algus][lopp] = kaugused[algus][tipp] + kaugused[tipp][lopp];
-//                }else
-                    if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp] && kaugused[algus][tipp] < sisend && kaugused[tipp][lopp] < sisend){
+                if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp]){
                     kaugused[algus][lopp] = kaugused[algus][tipp] + kaugused[tipp][lopp];
                 }
             }
@@ -77,7 +74,7 @@ vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks, int sisend){
     return kaugused;
 }
 
-void valjasta(vector<vector<int>> kaugused, string failinimi){
+void valjasta(vector<vector<int>> kaugused, const string& failinimi){
 
     ofstream valjund(failinimi);
 
