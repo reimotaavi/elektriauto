@@ -45,7 +45,34 @@ vector<vector<int>> loe_andmed(const string& failinimi){
     }
 }
 
-vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks, int sisend){
+vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks){
+    vector<vector<int>> kaugused;
+    for(unsigned int i = 0; i < linnade_arv; i++){
+        kaugused.push_back(vector<int>(linnade_arv, numeric_limits<int>::max()));
+        for(unsigned int j = 0; j < linnade_arv; j++){
+                kaugused[i][j] = maatriks[i][j];
+        }
+        kaugused[i][i] = 0;
+    }
+    for(unsigned int tipp = 0; tipp < linnade_arv; tipp++){
+        for (unsigned int algus = 0; algus < linnade_arv; algus++) {
+            if (kaugused[algus][tipp] == std::numeric_limits<int>::max()) {
+                continue;
+            }
+            for (unsigned int lopp = 0; lopp < linnade_arv; lopp++) {
+                if (kaugused[tipp][lopp] == std::numeric_limits<int>::max()) {
+                    continue;
+                }
+                if (kaugused[algus][tipp] + kaugused[tipp][lopp] < kaugused[algus][lopp]){
+                    kaugused[algus][lopp] = kaugused[algus][tipp] + kaugused[tipp][lopp];
+                }
+            }
+        }
+    }
+    return kaugused;
+}
+
+vector<vector<int>> leia_kaugused_sisendiga(vector<vector<int>>& maatriks, int sisend){
     vector<vector<int>> kaugused;
     for(unsigned int i = 0; i < linnade_arv; i++){
         kaugused.push_back(vector<int>(linnade_arv, numeric_limits<int>::max()));
@@ -74,6 +101,23 @@ vector<vector<int>> leia_kaugused(vector<vector<int>>& maatriks, int sisend){
     return kaugused;
 }
 
+double keskmine_pikenemine(vector<vector<int>>& kaugused, vector<vector<int>>& sisend_kaugused){
+    double keskmine_protsent = 0;
+    int vaartused = 0;
+    for(unsigned int i = 0; i < linnade_arv; i++){
+        for(unsigned int j = 0; j < linnade_arv; j++){
+            if(i == j){
+                continue;
+            }else{
+                double protsent = (sisend_kaugused[i][j] / kaugused[i][j]) * 100;
+                keskmine_protsent += protsent;
+                vaartused++;
+            }
+        }
+    }
+    return (keskmine_protsent / vaartused);
+}
+
 void valjasta(vector<vector<int>> kaugused, const string& failinimi){
 
     ofstream valjund(failinimi);
@@ -94,10 +138,9 @@ int main() {
 
     cout << "Sisesta soiduulatus: ";
     cin >> sisend;
-    vector<vector<int>> kaugused = leia_kaugused(maatriks, sisend);
-    valjasta(kaugused, "valjund.csv");
-
-//
-//    floydWarshall(maatriks, sisend);
+    vector<vector<int>> kaugused = leia_kaugused(maatriks);
+    vector<vector<int>> sisend_kaugused = leia_kaugused_sisendiga(kaugused, sisend);
+    double keskmine_pikenemine_protsent = keskmine_pikenemine(kaugused, sisend_kaugused);
+    cout << keskmine_pikenemine_protsent << endl;
 
 }
